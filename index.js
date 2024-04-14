@@ -3,6 +3,7 @@ const app = express();
 const dotenv = require('dotenv').config();
 const mongoose = require('mongoose');
 const multer = require('multer');
+const cors = require('cors')
 
 //ROUTE IMPORTS
 const authRoute = require('./routes/auth.js');
@@ -11,7 +12,8 @@ const postRoute = require('./routes/posts.js');
 const categoryRoute = require('./routes/categories.js');
 
 //MIDDLEWARES
-app.use(express.json())
+app.use(express.json());
+app.use(cors())
 
 
 //CONNECTION DB
