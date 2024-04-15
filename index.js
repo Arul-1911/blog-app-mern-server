@@ -3,17 +3,19 @@ const app = express();
 const dotenv = require('dotenv').config();
 const mongoose = require('mongoose');
 const multer = require('multer');
-const cors = require('cors')
+const cors = require('cors');
 
 //ROUTE IMPORTS
 const authRoute = require('./routes/auth.js');
 const userRoute = require('./routes/users.js');
 const postRoute = require('./routes/posts.js');
 const categoryRoute = require('./routes/categories.js');
+const path = require('path');
 
 //MIDDLEWARES
 app.use(express.json());
-app.use(cors())
+app.use(cors());
+app.use('/images', express.static(path.join(__dirname,'/images')))
 
 
 //CONNECTION DB
@@ -29,17 +31,18 @@ dbConnect(); //calling db conection function;
 
 //STORING IMAGES USING MULTER
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "Images");
-  },filename:(req,file,cb) => {
-   cb(null,'sample-name')
-  }
+  destination: (req, file, cb) => {
+    cb(null, "images");
+  },
+  filename: (req, file, cb) => {
+    cb(null, req.body.name);
+  },
 });
 
-const upload = multer({storage:storage});
-app.post('/api/upload', upload.single('file'),(req,res) => {
-   res.status(200).json('img has been uploaded')
-})
+const upload = multer({ storage: storage });
+app.post("/api/upload", upload.single("file"), (req, res) => {
+  res.status(200).json("File has been uploaded");
+});
 
 //USAGE OF ROUTES
 app.use('/api/auth', authRoute);

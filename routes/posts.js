@@ -5,10 +5,10 @@ const User = require('../models/Users');
 
 //CREATE NEW POST
 router.post("/", async (req, res) => {
-   const newPost = new Post(req.body);
-    try {
+   try {
+       const newPost = new Post(req.body);
       const savedPost = await newPost.save();
-      res.status(200).json(savedPost);
+      res.status(201).json(savedPost);
     } catch (error) {
       res.status(500).json(error);
     }
@@ -64,6 +64,9 @@ router.delete("/:id", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
+    if (!post.photo) {
+      post.photo = "default.jpg";
+    }
     res.status(200).json(post);
   } catch (error) {
     res.status(500).json(error);
